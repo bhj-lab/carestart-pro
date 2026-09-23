@@ -1,1 +1,0 @@
-Netlify deploy trigger for CareStart Pro sync - 2026-09-23
