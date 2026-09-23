@@ -998,3 +998,69 @@ const FORMS_DATA=[
   try {
     const saved = localStorage.getItem(STATE_KEY);
     if (saved) { select.value = saved; render(saved); }
+  } catch(e) {}
+})();
+
+  const STORAGE_KEY = 'carestartpro_roadmap_v1';
+  const checkboxes = document.querySelectorAll('.checklist input[type=checkbox]');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const resetBtn = document.getElementById('resetBtn');
+
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveState(){
+    try {
+      const checked = Array.from(checkboxes)
+        .map((cb, i) => cb.checked ? i : null)
+        .filter(i => i !== null);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+    } catch (e) {
+      // localStorage unavailable -- fail silently, app still works for this session
+    }
+  }
+
+  function updateProgress(){
+    const total = checkboxes.length;
+    const done = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const pct = total ? Math.round((done/total)*100) : 0;
+    progressFill.style.width = pct + '%';
+    progressText.textContent = done + ' of ' + total + ' complete';
+  }
+
+  function restoreState(){
+    const checkedIndices = loadState();
+    checkboxes.forEach((cb, i) => {
+      if (checkedIndices.includes(i)) {
+        cb.checked = true;
+        cb.closest('li').classList.add('done');
+      }
+    });
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('li').classList.toggle('done', cb.checked);
+      updateProgress();
+      saveState();
+    });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    checkboxes.forEach(cb => { cb.checked = false; cb.closest('li').classList.remove('done'); });
+    updateProgress();
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  });
+
+  restoreState();
+  updateProgress();
+</script>
+</body>
+</html>
