@@ -1,0 +1,19 @@
+name: Deploy CareStart Pro to Netlify
+
+on:
+  push:
+    paths:
+      - ".github/workflows/netlify-deploy.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy existing Netlify site
+        run: >
+          npx -y @netlify/mcp@latest
+          --site-id 973890ed-b05f-4d38-b724-51a2400855d1
+          --proxy-path "https://netlify-mcp.netlify.app/proxy/eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..kseucVmb0Fcgb-Y7.8ZoburhcKkbH7ff3Xc8dWtalfKvE14jOOUMuqU6dDHwMZtjfz8ugZ0N3wT2RAyqGp-D2Kjq9NTDioodqYmFvF1CxeUZIlULwkXIxYRFO5tFlmkCDCMXddmMDYQdJvWp2NKNLLmAvPbv2YV5ItmUg7ZWTPwcfpfwxEiqfUz7Rhf6xvy_gB1frJ7MBTidnVk9ENYOUDTuEAbpY8QgalcUNYV_AV-omf6t8PbdlgMKtn_qFefSGfGOl0Y-jUT_63pzf0qQmP3iiGRjvi2BAvjuupaMcA2ikLZkKT9-zZxDuz2mwLjs9jLmc-LkCGGBpH57PndAsGH_ln2p2pYwnpy6WZ9s_uUL1vH5ngbDnAQA_1-YRvqDdknSq5XezOT2QrR604LjaueL7.RSvOvdawvlIEcqoGoHZUUQ"
